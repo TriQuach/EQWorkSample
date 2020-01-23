@@ -17,6 +17,14 @@ def loadPOI():
         res.append(point)
     return res
 
+def convertArrayPoiToHashMap():
+    res = loadPOI()
+    hashMapPOI = {}
+    for poi in res:
+        obj = Poin2d(poi.lat,poi.long)
+        hashMapPOI[poi.POIID] = obj
+    return hashMapPOI
+
 def sqr(x) :
     return x*x
 
@@ -39,18 +47,24 @@ def getClosestPOI(point,arrayPOI):
 
 def assignPOI2Request(df):
     arrayPOI = loadPOI()
+    hashMapPOI = convertArrayPoiToHashMap()
     hashMap = {}
 
     for index, row in df.iterrows():
         requestGeo = Poin2d(row['Latitude'], row['Longitude'])
         closestPOI = getClosestPOI(requestGeo,arrayPOI)
+        dist = distance(requestGeo, hashMapPOI[closestPOI])
         if closestPOI not in hashMap:
-            hashMap[closestPOI] = [requestGeo]
-
+            tempObj = {'arrayPoints': [requestGeo], 'farestPoint': requestGeo, 'farestDist': dist}
+            hashMap[closestPOI]= tempObj
         else:
-            tempArrPoint = hashMap[closestPOI]
+            tempArrPoint = hashMap[closestPOI]['arrayPoints']
             tempArrPoint.append(requestGeo)
-            hashMap[closestPOI] = tempArrPoint
+            hashMap[closestPOI]['arrayPoints'] = tempArrPoint
+            if dist > hashMap[closestPOI]['farestDist']:
+                hashMap[closestPOI]['farestDist'] = dist
+                hashMap[closestPOI]['farestPoint'] = requestGeo
+
 
 
     return hashMap
