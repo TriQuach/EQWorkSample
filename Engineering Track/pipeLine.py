@@ -31,36 +31,31 @@ def creatEdges(graph):
         graph[word[1].strip('\n')] = tempArr
     return graph
 
+def getQuestion():
+    f = open("question.txt", "r")
+    res = []
+    count = 0
+    for line in f:
+        count += 1
+        word = line.split(' ')
+        task = word[-1].strip('\n')
+        if word[0] == 'starting':
+            objStart = {'start': task}
+            res.append(objStart)
+        else:
+            objEnd = {'end': task}
+            res.append(objEnd)
+
+    return res
+
 graph = {
-    'F': ['E'],
+    'F': ['E', 'K'],
+    'K': ['C'],
     'E': ['C'],
     'C': ['A','B'],
     'A': [],
     'B': []
 }
-# def find_all_paths(graph, start, end, path=[]):
-#     path = path + [start]
-#     # if start == end:
-#     #     return [path]
-#     if start not in graph:
-#         return []
-#     paths = []
-#     arrTask = graph[start]
-#     if end in arrTask:
-#         permuationTask = findPermutation(arrTask)
-#         for permuation in permuationTask:
-#             listTask = list(permuation)
-#             tempPath = path[:]
-#             tempPath = tempPath + listTask
-#             paths.append(tempPath)
-#     else:
-#         for node in graph[start]:
-#             if node not in path:
-#
-#                 newpaths = find_all_paths(graph, node, end, path)
-#                 for newpath in newpaths:
-#                     paths.append(newpath)
-#     return paths
 
 def find_all_paths(graph, start, end, path):
 
@@ -94,16 +89,39 @@ def getCorrectTopologicalOrder(arrTask):
     for pipeLine in arrTask:
         reverseArray(pipeLine)
 
+def getNecessityAndSufficiency(start,arrTask):
+    lastCheckPoint = start[-1]
+    res = []
+    for pipeLine in arrTask:
+        index = pipeLine.index(lastCheckPoint)
+        reducedLength = pipeLine[index:]
+        if len(reducedLength) > 2:
+            if reducedLength not in res:
+                res.append(reducedLength)
+
+    return res
+
+def getPipiLine(question, graph):
+    for i in range(0,len(question) - 1,2):
+        start = question[i]['start']
+
+        start = start.split(',')
+        end = question[i+1]['end']
+        path = [end]
+        arrTask = find_all_paths(graph, end, start[0], path)
+        getCorrectTopologicalOrder(arrTask)
+        if len(start) > 1:
+            arrTask = getNecessityAndSufficiency(start,arrTask)
+
+        print('--------- *** ---------')
+        print('PipeLine for starting task:' + str(start) + ', goal task:' + str([end]))
+        print(arrTask)
+        print('--------- *** ---------')
+        print('\n')
 
 graph = createNodes()
 graph = creatEdges(graph)
 
-path = ['36']
-arrTask = find_all_paths(graph,'36', '73', path)
-getCorrectTopologicalOrder(arrTask)
-print(arrTask)
+question = getQuestion()
 
-
-# arr = ['112', '20']
-# arr = ['a', 'b']
-# print(findPermutation(arr))
+getPipiLine(question, graph)

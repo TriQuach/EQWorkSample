@@ -1,0 +1,4 @@
+starting task: 73
+goal task: 36
+starting task: 73,112,97
+goal task: 36
