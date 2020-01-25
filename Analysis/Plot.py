@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
+import shapely
+
 from Analysis.analysis import *
 from Label.label import *
+from Analysis.analysis import *
 from shapely.geometry import Point
 import geopandas as gpd
 from geopandas import GeoDataFrame
@@ -44,7 +47,7 @@ def plotWorldMap():
 
     return ax
 def plotPoint(ax):
-    hashMapLatLong = labelWithDataFrame()
+    hashMapLatLong = labelWithDataFrameForPlot()
 
 
 
@@ -64,6 +67,15 @@ def plotPoint(ax):
 
         gdf.plot(ax=ax, marker='o', color=(r, g, b, 1), markersize=15)
         count += 1
+
+    # for poi in hashMapLatLong:
+    #     arrayPoints = hashMapLatLong[poi]['arrayPoints']
+    #     # legend.append('points around ' + poi)
+    #     r, g, b = np.random.uniform(0, 1, 3)
+    #     for point in arrayPoints:
+    #         request = plt.Circle((point.long, point.lat),1.0,
+    #                              color=(r,g,b,1), fill=True)
+    #         ax.add_artist(request)
 
 
 
@@ -92,11 +104,29 @@ def plotAllPOI(ax):
         gdf.plot(ax=ax, marker='o', color=(r, g, b, 1), markersize=30)
         legend.append(poi)
 
+    # for poi in hashMapPOI:
+    #     # legend.append(poi)
+    #     r, g, b = np.random.uniform(0, 1, 3)
+    #     poiCirecle = plt.Circle((hashMapPOI[poi].long, hashMapPOI[poi].lat),2.0,
+    #                          color=(r, g, b, 1), fill=True, label = 'asd')
+    #     ax.add_artist(poiCirecle)
+    #     ax.legend()
+
+
+def plotCircle(ax):
+    hashMapPOI = convertArrayPoiToHashMap()
+    hashMapRadiusDensity = getRadiusDensity()
+    for poi in hashMapRadiusDensity:
+        circle2 = plt.Circle((hashMapPOI[poi].long, hashMapPOI[poi].lat), hashMapRadiusDensity[poi]['radius'], color='r', fill=False)
+        ax.add_artist(circle2)
 
 
 legend = []
 ax = plotWorldMap()
 plotPoint(ax)
 plotAllPOI(ax)
+
+plotCircle(ax)
+
 plt.legend(legend)
 plt.show()

@@ -69,7 +69,7 @@ def assignPOI2Request(df):
 
     return hashMap
 
-def getHashMapLatLong(df):
+def getHashMapLatLongForPlot(df):
     arrayPOI = loadPOI()
 
     hashMapLatLong = {}
@@ -92,6 +92,15 @@ def getHashMapLatLong(df):
 
     return hashMapLatLong
 
+def getDataFrameForClassification(df):
+    arrayPOI = loadPOI()
+    df['POI'] = None
+    for index, row in df.iterrows():
+        requestGeo = Poin2d(row['Latitude'], row['Longitude'])
+        closestPOI = getClosestPOI(requestGeo, arrayPOI)
+        df.at[index,'POI'] = closestPOI
+
+    return df
 def label():
     df = cleanUp()
 
@@ -99,7 +108,13 @@ def label():
     hashMap = assignPOI2Request(df)
     return hashMap
 
-def labelWithDataFrame():
+def labelWithDataFrameForPlot():
     df = cleanUp()
-    hashMapLatLong = getHashMapLatLong(df)
+    hashMapLatLong = getHashMapLatLongForPlot(df)
     return hashMapLatLong
+
+def labelWithDataFrameForModel():
+    df = cleanUp()
+
+    return getDataFrameForClassification(df)
+
