@@ -117,7 +117,9 @@ graph = {
 ```
 **Advantage**: when we iterate the graph, at a spefic node, it takes `O(1)` to get the list of its children.
 #### 2) Algorithm
-Please visit function `find_all_paths` in `Engineering Track/pipeLine.py` to see more details of the backtracking algorithm.  The complexity of this algorithm is `O(k*n)`, where `n` is the number of nodes in the graph and `k` is the number of permutations between children of a specific node. 
+Please visit `Engineering Track/pipeLine.py` to see more details of the algorithms
+-  `find_all_paths` is a backtracking algorithm to find all paths given the start node and goal node.  The complexity of this algorithm is `O(k*n)`, where `k` is the number of permutations between children of a specific node and `n` is the number of nodes in the graph. 
+-  `reverseArray` is to reverse an array to get correct topological order.  By using two pointers technique, this algorithm has the complexity of `O(n)`.
 
 #### 3) Result
 Please vist `Engineering Track/result.txt` to find the result of engineering track.  I have added `starting task: 73,112,97` and `goal task: 36` to test the necessity and sufficiency of the algorithm.
