@@ -79,14 +79,6 @@ X = X.reshape((X.shape[0], 1, 1))
 y = np.asarray(y)
 y = y.reshape((y.shape[0], 1, 1))
 
-# X = np.ndarray(X)
-#
-# max_review_length = 500
-#
-#
-# # X = create_dataset(X, look_back = 1)
-# # y = create_dataset(y, look_back = 1)
-# #
 seq_len = 1
 
 model = Sequential()
@@ -99,4 +91,3 @@ model.summary()
 adam = Adam(lr=0.001)
 chk = ModelCheckpoint('best_model.pkl', monitor='val_acc', save_best_only=True, mode='max', verbose=1)
 model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
-model.fit(X, y, epochs=20, batch_size=128, callbacks=[chk])

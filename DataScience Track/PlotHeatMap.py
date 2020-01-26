@@ -23,7 +23,6 @@ def plotHeatMap(ax):
         ax.scatter(x, y, c=z, s=30, edgecolor='')
 
     plt.show()
-    print('asd')
 
 def performKDEandPlot(x,y,ax):
     xmin, xmax = min(x) - 1, max(x) + 1
@@ -36,14 +35,8 @@ def performKDEandPlot(x,y,ax):
     kernel = st.gaussian_kde(values)
     f = np.reshape(kernel(positions).T, xx.shape)
 
-    # fig = plt.figure()
-
-    # ax.set_xlim(xmin, xmax)
-    # ax.set_ylim(ymin, ymax)
     # Contourf plot
-    cfset = ax.contourf(xx, yy, f, cmap='Blues')
-    # Or kernel density estimate plot instead of the contourf plot
-    # ax.imshow(np.rot90(f), cmap='Blues', extent=[xmin, xmax, ymin, ymax])
+    # cfset = ax.contourf(xx, yy, f, cmap='Blues')
     # Contour plot
     cset = ax.contour(xx, yy, f, colors='k')
     # Label plot
@@ -60,8 +53,8 @@ def plotDensityWithContour(ax):
 
 
 ax = plotWorldMap()
-# plotHeatMap(ax)
-plotDensityWithContour(ax)
+plotHeatMap(ax)
+# plotDensityWithContour(ax)
 plt.show()
 
 
