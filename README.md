@@ -10,7 +10,6 @@
 - ##### `numpy`
 - ##### `scipy.stats`
 - ##### `tensorflow`
-- ##### `scipy.stats`
 
 ### The average and standard deviation between POI and requests
 
