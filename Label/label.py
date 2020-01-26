@@ -61,7 +61,7 @@ def assignPOI2Request(df):
             tempArrPoint = hashMap[closestPOI]['arrayPoints']
             tempArrPoint.append(requestGeo)
             hashMap[closestPOI]['arrayPoints'] = tempArrPoint
-            if dist > hashMap[closestPOI]['farestDist']:
+            if dist > hashMap[closestPOI]['farestDist'] and dist < 20:
                 hashMap[closestPOI]['farestDist'] = dist
                 hashMap[closestPOI]['farestPoint'] = requestGeo
 
@@ -71,24 +71,25 @@ def assignPOI2Request(df):
 
 def getHashMapLatLongForPlot(df):
     arrayPOI = loadPOI()
-
+    hashMapPOI = convertArrayPoiToHashMap()
     hashMapLatLong = {}
     for index, row in df.iterrows():
         requestGeo = Poin2d(row['Latitude'], row['Longitude'])
         closestPOI = getClosestPOI(requestGeo,arrayPOI)
-        if closestPOI not in hashMapLatLong:
+        if distance(requestGeo,hashMapPOI[closestPOI]) < 20:
+            if closestPOI not in hashMapLatLong:
 
-            col_names = ['lat', 'long']
-            dfLatLong = pd.DataFrame(columns=col_names)
-            obj = {'lat': requestGeo.lat, 'long': requestGeo.long}
-            dfLatLong.loc[len(dfLatLong)] = obj
-            hashMapLatLong[closestPOI] = dfLatLong
+                col_names = ['lat', 'long']
+                dfLatLong = pd.DataFrame(columns=col_names)
+                obj = {'lat': requestGeo.lat, 'long': requestGeo.long}
+                dfLatLong.loc[len(dfLatLong)] = obj
+                hashMapLatLong[closestPOI] = dfLatLong
 
-        else:
-            dfLatLong = hashMapLatLong[closestPOI]
-            obj = {'lat': requestGeo.lat, 'long': requestGeo.long}
-            dfLatLong.loc[len(dfLatLong)] = obj
-            hashMapLatLong[closestPOI] = dfLatLong
+            else:
+                dfLatLong = hashMapLatLong[closestPOI]
+                obj = {'lat': requestGeo.lat, 'long': requestGeo.long}
+                dfLatLong.loc[len(dfLatLong)] = obj
+                hashMapLatLong[closestPOI] = dfLatLong
 
     return hashMapLatLong
 
@@ -117,4 +118,5 @@ def labelWithDataFrameForModel():
     df = cleanUp()
 
     return getDataFrameForClassification(df)
+
 
